@@ -9,16 +9,17 @@ import TabItem from '@theme/TabItem';
 
 ### React Native Version Support
 
-React Native OWL supports React Native versions 0.75.0 and newer.
+React Native OWL supports React Native versions 0.79.0 and newer.
 
-### Migration notes for React Native 0.75+
+### Migration notes for React Native 0.79+
 
 Upgrading projects that already use OWL requires a few updates:
 
-- Upgrade your app to `react-native@^0.75.0` and `react@^18.2.0` (or newer within the 18.x line).
-- Ensure Android projects target API level 34 (`compileSdkVersion`/`targetSdkVersion`) and have `minSdkVersion` ≥ 21 to match the OWL native module defaults.
-- Update your test tooling to Jest 29 and `ts-jest` 29+; earlier versions are no longer supported.
-- If you mock `GestureResponderEvent` objects in tests, prefer typed helpers (see `getGestureResponderEvent` in OWL) or cast their `currentTarget`/`target` fields to the correct types provided by React Native 0.75.
+- Upgrade your app to `react-native@^0.79.5` alongside `react@19`/`@types/react@19`, and run that combination on Node.js 18 or 20.
+- Ensure Android projects adopt Android Gradle Plugin 8.7+, compile/target SDK 35, set `minSdkVersion` ≥ 24, update the Gradle wrapper to 8.9+, and include the new plugin location `includeBuild('../node_modules/@react-native/gradle-plugin')`.
+- Update your test tooling to Jest 29 and `ts-jest` 29+, and move to TypeScript 5.4+ (or newer) so React 19 type definitions compile without errors.
+- Add an app-level `PrivacyInfo.xcprivacy` file and raise the iOS deployment target to 15.1 so Apple’s Required Reason APIs are declared when CocoaPods aggregates privacy manifests.
+- If you mock `GestureResponderEvent` objects in tests, prefer typed helpers (see `getGestureResponderEvent` in OWL) or cast their `currentTarget`/`target` fields to the correct types provided by React Native 0.79.
 
 After installing the latest `react-native-owl`, run `yarn build` (or `npm run build`) once to regenerate the bundled assets before executing tests.
 
