@@ -4,9 +4,10 @@ import { WEBSOCKET_PORT } from './constants';
 import { Logger } from './logger';
 
 export const startWebSocketServer = async (
-  logger: Logger
+  logger: Logger,
+  port: number = WEBSOCKET_PORT
 ): Promise<WebSocket.Server> => {
-  const wss = new WebSocket.Server({ port: WEBSOCKET_PORT });
+  const wss = new WebSocket.Server({ port });
 
   return new Promise((resolve) => {
     wss.on('connection', (ws) => {
@@ -28,7 +29,13 @@ export const startWebSocketServer = async (
     });
 
     wss.on('listening', () => {
-      logger.info(`[OWL - WebSocket] Listening on port ${wss.options.port}.`);
+      const address = wss.address();
+      const resolvedPort =
+        typeof address === 'object' && address !== null
+          ? address.port
+          : wss.options.port;
+
+      logger.info(`[OWL - WebSocket] Listening on port ${resolvedPort}.`);
 
       return resolve(wss);
     });
@@ -37,9 +44,11 @@ export const startWebSocketServer = async (
 
 export const createWebSocketClient = async (
   logger: Logger,
-  onMessage: (message: string) => void
+  onMessage: (message: string) => void,
+  port: number = WEBSOCKET_PORT,
+  host: string = 'localhost'
 ): Promise<WebSocket> => {
-  const wsClient = new WebSocket(`ws://localhost:${WEBSOCKET_PORT}`);
+  const wsClient = new WebSocket(`ws://${host}:${port}`);
 
   return new Promise((resolve) => {
     wsClient.on('open', () => resolve(wsClient));

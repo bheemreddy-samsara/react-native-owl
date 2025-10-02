@@ -40,15 +40,15 @@ export const initWebSocket = (
       logger.info(`[OWL - Websocket] onerror: ${errorMessage}`);
     };
 
-    ws.onclose = (event) => {
-      const closeEvent = event as CloseEvent;
-      const reason = typeof closeEvent.reason === 'string'
-        ? closeEvent.reason
-        : 'Connection closed';
+    ws.onclose = (event: { reason?: unknown } | undefined) => {
+      const reason =
+        event && typeof event.reason === 'string' && event.reason.length > 0
+          ? event.reason
+          : 'Connection closed';
 
       logger.info(`[OWL - Websocket] onclose: ${reason}`);
 
-      reject(closeEvent);
+      reject(new Error(reason));
     };
   });
 };

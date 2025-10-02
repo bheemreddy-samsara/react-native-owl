@@ -1,29 +1,22 @@
 /**
  * Metro configuration for React Native
  * https://github.com/facebook/react-native
- *
- * @format
  */
 const path = require('path');
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 
-// As the example project uses `link:../` for react-native-owl, which creates a symlink, we need to manually map the project so it is properly used my Metro.
-// This will not be required by other projects using react-native-owl installed from a package repository.
+const workspaceRoot = path.resolve(__dirname, '..');
+const defaultConfig = getDefaultConfig(__dirname);
 
+// As the example project uses `link:../` for react-native-owl, which creates a symlink, we
+// need to manually map the project so Metro resolves bundled code from the workspace.
 const extraNodeModules = {
-  'react-native-owl': path.resolve(path.join(__dirname, '..')),
+  'react-native-owl': workspaceRoot,
 };
-const watchFolders = [path.resolve(path.join(__dirname, '..', 'dist'))];
 
-module.exports = {
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
-  },
+const config = {
   resolver: {
+    ...defaultConfig.resolver,
     extraNodeModules: new Proxy(extraNodeModules, {
       get: (target, name) =>
         name in target
@@ -31,5 +24,10 @@ module.exports = {
           : path.join(process.cwd(), `node_modules/${name}`),
     }),
   },
-  watchFolders,
+  watchFolders: [
+    ...defaultConfig.watchFolders,
+    path.resolve(workspaceRoot, 'dist'),
+  ],
 };
+
+module.exports = mergeConfig(defaultConfig, config);

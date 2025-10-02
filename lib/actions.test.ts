@@ -15,7 +15,7 @@ describe('actions.ts', () => {
 
   jest.spyOn(websocket, 'createWebSocketClient').mockImplementation(
     // @ts-ignore
-    (logger, onMessage) => {
+    (logger, onMessage, _port, _host) => {
       onMessageCallback(onMessage);
 
       return Promise.resolve({ send, close });

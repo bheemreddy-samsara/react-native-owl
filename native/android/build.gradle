@@ -6,12 +6,14 @@ buildscript {
         }
 
         dependencies {
-            classpath 'com.android.tools.build:gradle:8.3.2'
+            classpath 'com.android.tools.build:gradle:8.7.1'
+            classpath "com.facebook.react:react-native-gradle-plugin"
         }
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'com.facebook.react'
 
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -19,12 +21,16 @@ def safeExtGet(prop, fallback) {
 
 def isOwlBuild = project.hasProperty("isOwlBuild")
 
+react {
+    libraryName = "ReactNativeOwl"
+}
+
 android {
     namespace 'com.formidable.reactnativeowl'
-    compileSdkVersion safeExtGet('compileSdkVersion', 34)
+    compileSdk = safeExtGet('compileSdkVersion', 35)
     defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', 21)
-        targetSdkVersion safeExtGet('targetSdkVersion', 34)
+        minSdk = safeExtGet('minSdkVersion', 24)
+        targetSdk = safeExtGet('targetSdkVersion', 35)
         versionCode 1
         versionName "1.0"
     }
@@ -69,6 +75,5 @@ repositories {
 }
 
 dependencies {
-    //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation("com.facebook.react:react-android")
 }
