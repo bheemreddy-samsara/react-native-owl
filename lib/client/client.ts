@@ -29,24 +29,26 @@ export const initClient = () => {
  * Based on an elements props, store element tracking data and return updated props
  */
 export const applyElementTracking = (
-  props: any,
+  props: Record<string, unknown> | undefined,
   isJsx: boolean = false
 ): {
-  [key: string]: any;
+  [key: string]: unknown;
   ref?: React.RefObject<unknown>;
-  showsHorizontalScrollIndicator: false;
-  showsVerticalScrollIndicator: false;
+  showsHorizontalScrollIndicator: boolean;
+  showsVerticalScrollIndicator: boolean;
 } => {
+  const normalizedProps = props ?? {};
+
   if (isJsx) {
-    applyJsxChildrenElementTracking(props);
+    applyJsxChildrenElementTracking(normalizedProps);
   }
 
-  const testID = props?.testID;
+  const testID = (normalizedProps as { testID?: string }).testID;
 
   const returnProps = {
-    ...props,
-    showsHorizontalScrollIndicator: false,
-    showsVerticalScrollIndicator: false,
+    ...normalizedProps,
+    showsHorizontalScrollIndicator: false as const,
+    showsVerticalScrollIndicator: false as const,
   };
 
   if (!testID) {
@@ -56,15 +58,25 @@ export const applyElementTracking = (
   const existingTrackedElement = get(testID);
 
   const ref =
-    (props?.ref as React.RefObject<unknown> | undefined) ||
+    ((normalizedProps as { ref?: React.RefObject<unknown> }).ref ??
+      undefined) ||
     existingTrackedElement?.ref ||
     React.createRef();
 
   const trackData: TrackedElementData = {
     ref: existingTrackedElement?.ref || ref,
-    onPress: existingTrackedElement?.onPress || props?.onPress,
-    onLongPress: existingTrackedElement?.onLongPress || props?.onLongPress,
-    onChangeText: existingTrackedElement?.onChangeText || props?.onChangeText,
+    onPress:
+      existingTrackedElement?.onPress ||
+      (normalizedProps as { onPress?: TrackedElementData['onPress'] }).onPress,
+    onLongPress:
+      existingTrackedElement?.onLongPress ||
+      (normalizedProps as { onLongPress?: TrackedElementData['onLongPress'] })
+        .onLongPress,
+    onChangeText:
+      existingTrackedElement?.onChangeText ||
+      (normalizedProps as {
+        onChangeText?: TrackedElementData['onChangeText'];
+      }).onChangeText,
   };
 
   add(logger, testID, trackData);
@@ -78,9 +90,13 @@ export const applyElementTracking = (
 /**
  * To get access to the prop callbacks when the element is created, we need to check the children
  */
-export const applyJsxChildrenElementTracking = (props: any): void => {
-  if (props.children && Array.isArray(props.children)) {
-    props.children.forEach((child: any) => {
+export const applyJsxChildrenElementTracking = (
+  props: Record<string, unknown>
+): void => {
+  const children = (props as { children?: unknown }).children;
+
+  if (Array.isArray(children)) {
+    children.forEach((child: any) => {
       const testID = child?.props?.testID;
 
       if (!testID) {
@@ -88,19 +104,20 @@ export const applyJsxChildrenElementTracking = (props: any): void => {
       }
 
       const existingTrackedElement = get(testID);
+      const childProps = child?.props ?? {};
 
       const ref =
-        (child?.props?.ref as React.RefObject<unknown> | undefined) ||
+        (childProps?.ref as React.RefObject<unknown> | undefined) ||
         existingTrackedElement?.ref ||
         React.createRef();
 
       const trackData: TrackedElementData = {
         ref: existingTrackedElement?.ref || ref,
-        onPress: existingTrackedElement?.onPress || child?.props?.onPress,
+        onPress: existingTrackedElement?.onPress || childProps?.onPress,
         onLongPress:
-          existingTrackedElement?.onLongPress || child?.props?.onLongPress,
+          existingTrackedElement?.onLongPress || childProps?.onLongPress,
         onChangeText:
-          existingTrackedElement?.onChangeText || child?.props?.onChangeText,
+          existingTrackedElement?.onChangeText || childProps?.onChangeText,
       };
 
       add(logger, testID, trackData);
@@ -115,39 +132,56 @@ export const applyJsxChildrenElementTracking = (props: any): void => {
 export const patchReact = () => {
   const originalReactCreateElement: typeof React.createElement =
     React.createElement;
-  let automateTimeout: number;
+  let automateTimeout: ReturnType<typeof setTimeout> | undefined;
 
-  if (parseInt(React.version.split('.')[0], 10) >= 18) {
-    const jsxRuntime = require('react/jsx-runtime');
-    const origJsx = jsxRuntime.jsx;
-
-    // @ts-ignore
-    jsxRuntime.jsx = (type: any, config: Object, maybeKey?: string) => {
-      const newProps = applyElementTracking(config, true);
-
+  const scheduleReactUpdateSettled = () => {
+    if (automateTimeout) {
       clearTimeout(automateTimeout);
-
-      automateTimeout = setTimeout(() => {
-        isReactUpdating = false;
-      }, CHECK_INTERVAL);
-
-      isReactUpdating = true;
-
-      return origJsx(type, newProps, maybeKey);
-    };
-  }
-
-  // @ts-ignore
-  React.createElement = (type, props, ...children) => {
-    const newProps = applyElementTracking(props);
-
-    clearTimeout(automateTimeout);
+    }
 
     automateTimeout = setTimeout(() => {
       isReactUpdating = false;
     }, CHECK_INTERVAL);
 
     isReactUpdating = true;
+  };
+
+  const applyTracking = (
+    props: Record<string, unknown> | undefined,
+    isJsx: boolean
+  ) => {
+    const newProps = applyElementTracking(props, isJsx);
+    scheduleReactUpdateSettled();
+    return newProps;
+  };
+
+  if (parseInt(React.version.split('.')[0], 10) >= 18) {
+    const jsxRuntime = require('react/jsx-runtime');
+    const wrapJsxCall = (original: (...args: any[]) => any) =>
+      function wrappedJsx(
+        type: any,
+        config: Record<string, unknown> | undefined,
+        maybeKey?: string
+      ) {
+        return original(type, applyTracking(config, true), maybeKey);
+      };
+
+    if (typeof jsxRuntime.jsx === 'function') {
+      jsxRuntime.jsx = wrapJsxCall(jsxRuntime.jsx);
+    }
+
+    if (typeof jsxRuntime.jsxs === 'function') {
+      jsxRuntime.jsxs = wrapJsxCall(jsxRuntime.jsxs);
+    }
+
+    if (typeof jsxRuntime.jsxDEV === 'function') {
+      jsxRuntime.jsxDEV = wrapJsxCall(jsxRuntime.jsxDEV);
+    }
+  }
+
+  // @ts-ignore
+  React.createElement = (type, props, ...children) => {
+    const newProps = applyTracking(props, false);
 
     return originalReactCreateElement(type, newProps, ...children);
   };

@@ -10,33 +10,34 @@ import { TrackedElementData } from './trackedElements';
  * When we call onPress/onLongPress, the function expects an `event` arg of type `GestureResponderEvent`.
  * To try to prevent errors in where the onPress/onLongPress function uses the event data, we create some mock event data.
  */
-const getGestureResponderEvent = (): GestureResponderEvent => ({
-  nativeEvent: {
-    changedTouches: [],
-    identifier: 'OWL-identifier',
-    locationX: 0,
-    locationY: 0,
-    pageX: 0,
-    pageY: 0,
-    target: 'OWL-target',
-    timestamp: Date.now(),
-    touches: [],
-  },
-  currentTarget: 0,
-  target: 0,
-  bubbles: false,
-  cancelable: false,
-  defaultPrevented: false,
-  eventPhase: 0,
-  isTrusted: true,
-  preventDefault: () => {},
-  isDefaultPrevented: () => false,
-  stopPropagation: () => {},
-  isPropagationStopped: () => false,
-  persist: () => {},
-  timeStamp: Date.now(),
-  type: 'RCTView',
-});
+const getGestureResponderEvent = (): GestureResponderEvent =>
+  ({
+    nativeEvent: {
+      changedTouches: [],
+      identifier: 'OWL-identifier',
+      locationX: 0,
+      locationY: 0,
+      pageX: 0,
+      pageY: 0,
+      target: 'OWL-target',
+      timestamp: Date.now(),
+      touches: [],
+    },
+    currentTarget: null as unknown as GestureResponderEvent['currentTarget'],
+    target: null as unknown as GestureResponderEvent['target'],
+    bubbles: false,
+    cancelable: false,
+    defaultPrevented: false,
+    eventPhase: 0,
+    isTrusted: true,
+    preventDefault: () => {},
+    isDefaultPrevented: () => false,
+    stopPropagation: () => {},
+    isPropagationStopped: () => false,
+    persist: () => {},
+    timeStamp: Date.now(),
+    type: 'RCTView',
+  }) as GestureResponderEvent;
 
 /**
  * This function handles the individual actions that are requested in the jest tests.

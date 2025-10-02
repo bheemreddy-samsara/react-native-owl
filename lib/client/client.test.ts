@@ -43,7 +43,7 @@ describe('client.ts', () => {
     React.createElement('View', props);
 
     expect(createElement).toHaveBeenCalledTimes(1);
-    expect(applyElementTracking).toHaveBeenCalledWith(props);
+    expect(applyElementTracking).toHaveBeenCalledWith(props, false);
   });
 
   describe('applyElementTracking', () => {

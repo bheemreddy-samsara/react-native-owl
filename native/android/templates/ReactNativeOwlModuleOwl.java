@@ -35,7 +35,14 @@ public class ReactNativeOwlModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 final Activity activity = getCurrentActivity();
-                activity.getWindow().getDecorView().setSystemUiVisibility(UI_FLAG_IMMERSIVE);
+                if (activity == null || activity.getWindow() == null) {
+                    return;
+                }
+
+                final View decorView = activity.getWindow().getDecorView();
+                if (decorView != null) {
+                    decorView.setSystemUiVisibility(UI_FLAG_IMMERSIVE);
+                }
             }
         });
     }
