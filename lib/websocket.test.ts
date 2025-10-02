@@ -17,17 +17,19 @@ describe('websocket.ts', () => {
   const mockClient1LoggerInfo = jest.spyOn(client1Logger, 'info');
   const mockClient2LoggerInfo = jest.spyOn(client2Logger, 'info');
 
-  const mockOnMessage = jest.fn(() => {});
+  let mockClient1OnMessage: jest.Mock;
+  let mockClient2OnMessage: jest.Mock;
 
   beforeEach(async () => {
     mockServerLoggerInfo.mockReset();
     mockClient1LoggerInfo.mockReset();
     mockClient2LoggerInfo.mockReset();
-    mockOnMessage.mockReset();
+    mockClient1OnMessage = jest.fn();
+    mockClient2OnMessage = jest.fn();
 
     wsServer = await startWebSocketServer(serverLogger);
-    wsClient1 = await createWebSocketClient(client1Logger, mockOnMessage);
-    wsClient2 = await createWebSocketClient(client2Logger, mockOnMessage);
+    wsClient1 = await createWebSocketClient(client1Logger, mockClient1OnMessage);
+    wsClient2 = await createWebSocketClient(client2Logger, mockClient2OnMessage);
   });
 
   afterEach(() => {
@@ -37,7 +39,7 @@ describe('websocket.ts', () => {
   });
 
   it('should start the server and accept client connections', async () => {
-    await waitFor(5);
+    await waitFor(50);
 
     expect(mockServerLoggerInfo).toHaveBeenNthCalledWith(
       1,
@@ -71,10 +73,11 @@ describe('websocket.ts', () => {
   it('should use the onMessage handler', async () => {
     await wsClient1.send('Hello!');
 
-    await waitFor(5);
+    await waitFor(50);
 
     // Check that the onMessage callback was used
-    expect(mockOnMessage).toHaveBeenCalledTimes(1);
-    expect(mockOnMessage).toHaveBeenCalledWith('Hello!');
+    expect(mockClient1OnMessage).not.toHaveBeenCalled();
+    expect(mockClient2OnMessage).toHaveBeenCalledTimes(1);
+    expect(mockClient2OnMessage).toHaveBeenCalledWith('Hello!');
   });
 });

@@ -9,7 +9,18 @@ import TabItem from '@theme/TabItem';
 
 ### React Native Version Support
 
-React Native OWL currently supports React Native versions up to 0.70.x.
+React Native OWL supports React Native versions 0.75.0 and newer.
+
+### Migration notes for React Native 0.75+
+
+Upgrading projects that already use OWL requires a few updates:
+
+- Upgrade your app to `react-native@^0.75.0` and `react@^18.2.0` (or newer within the 18.x line).
+- Ensure Android projects target API level 34 (`compileSdkVersion`/`targetSdkVersion`) and have `minSdkVersion` ≥ 21 to match the OWL native module defaults.
+- Update your test tooling to Jest 29 and `ts-jest` 29+; earlier versions are no longer supported.
+- If you mock `GestureResponderEvent` objects in tests, prefer typed helpers (see `getGestureResponderEvent` in OWL) or cast their `currentTarget`/`target` fields to the correct types provided by React Native 0.75.
+
+After installing the latest `react-native-owl`, run `yarn build` (or `npm run build`) once to regenerate the bundled assets before executing tests.
 
 ### Installation
 

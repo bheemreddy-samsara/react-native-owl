@@ -31,14 +31,24 @@ export const initWebSocket = (
       onMessage(e.data.toString());
     };
 
-    ws.onerror = (e) => {
-      logger.info(`[OWL - Websocket] onerror: ${e.message}`);
+    ws.onerror = (event) => {
+      const errorMessage =
+        typeof (event as { message?: unknown }).message === 'string'
+          ? (event as { message?: unknown }).message
+          : 'Unknown error';
+
+      logger.info(`[OWL - Websocket] onerror: ${errorMessage}`);
     };
 
-    ws.onclose = (e) => {
-      logger.info(`[OWL - Websocket] onclose: ${e.reason}`);
+    ws.onclose = (event) => {
+      const closeEvent = event as CloseEvent;
+      const reason = typeof closeEvent.reason === 'string'
+        ? closeEvent.reason
+        : 'Connection closed';
 
-      reject(e);
+      logger.info(`[OWL - Websocket] onclose: ${reason}`);
+
+      reject(closeEvent);
     };
   });
 };
