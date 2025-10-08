@@ -74,9 +74,11 @@ export const applyElementTracking = (
         .onLongPress,
     onChangeText:
       existingTrackedElement?.onChangeText ||
-      (normalizedProps as {
-        onChangeText?: TrackedElementData['onChangeText'];
-      }).onChangeText,
+      (
+        normalizedProps as {
+          onChangeText?: TrackedElementData['onChangeText'];
+        }
+      ).onChangeText,
   };
 
   add(logger, testID, trackData);

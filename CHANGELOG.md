@@ -1,5 +1,11 @@
 # react-native-owl
 
+## 1.6.0 (Unreleased)
+
+### Minor Changes
+
+- Add official support for React Native 0.79, including updated Android immersive mode handling.
+
 ## 1.5.0
 
 ### Minor Changes

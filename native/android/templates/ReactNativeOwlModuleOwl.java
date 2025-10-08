@@ -2,8 +2,12 @@ package com.formidable.reactnativeowl;
 
 import android.app.Activity;
 import android.view.View;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -13,13 +17,6 @@ import com.facebook.react.module.annotations.ReactModule;
 @ReactModule(name = ReactNativeOwlModule.NAME)
 public class ReactNativeOwlModule extends ReactContextBaseJavaModule {
     public static final String NAME = "ReactNativeOwl";
-
-    private static final int UI_FLAG_IMMERSIVE = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
     public ReactNativeOwlModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -35,14 +32,31 @@ public class ReactNativeOwlModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 final Activity activity = getCurrentActivity();
-                if (activity == null || activity.getWindow() == null) {
+                if (activity == null) {
                     return;
                 }
 
-                final View decorView = activity.getWindow().getDecorView();
-                if (decorView != null) {
-                    decorView.setSystemUiVisibility(UI_FLAG_IMMERSIVE);
+                final Window window = activity.getWindow();
+                if (window == null) {
+                    return;
                 }
+
+                final View decorView = window.getDecorView();
+                if (decorView == null) {
+                    return;
+                }
+
+                WindowCompat.setDecorFitsSystemWindows(window, false);
+
+                final WindowInsetsControllerCompat controller =
+                        WindowCompat.getInsetsController(window, decorView);
+                if (controller == null) {
+                    return;
+                }
+
+                controller.hide(WindowInsetsCompat.Type.systemBars());
+                controller.setSystemBarsBehavior(
+                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             }
         });
     }

@@ -51,10 +51,7 @@ describe('websocket.ts', () => {
     return false;
   };
 
-  const bootstrap = async (
-    onMessage1: jest.Mock,
-    onMessage2: jest.Mock
-  ) => {
+  const bootstrap = async (onMessage1: jest.Mock, onMessage2: jest.Mock) => {
     const server = await startWebSocketServer(serverLogger, 0);
     const address = server.address();
     const resolvedPort =

@@ -37,7 +37,7 @@ const getGestureResponderEvent = (): GestureResponderEvent =>
     persist: () => {},
     timeStamp: Date.now(),
     type: 'RCTView',
-  }) as GestureResponderEvent;
+  } as GestureResponderEvent);
 
 /**
  * This function handles the individual actions that are requested in the jest tests.
