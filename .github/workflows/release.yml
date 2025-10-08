@@ -17,6 +17,10 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v2
+
+      - name: Enable Corepack
+        run: corepack enable
+
       - uses: actions/setup-node@v3
         with:
           node-version: 20
