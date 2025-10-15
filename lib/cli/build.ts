@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import path from 'path';
 import execa from 'execa';
 
@@ -7,6 +8,28 @@ import { getConfig } from './config';
 
 export const ENTRY_FILE =
   './node_modules/react-native-owl/dist/client/index.app.js';
+const FALLBACK_ENTRY_FILES = [
+  '../dist/client/index.app.js',
+  './dist/client/index.app.js',
+];
+
+export const resolveEntryFile = (cwd = process.cwd()): string => {
+  if (process.env.OWL_ENTRY_FILE) {
+    return path.resolve(cwd, process.env.OWL_ENTRY_FILE);
+  }
+
+  const candidates = [ENTRY_FILE, ...FALLBACK_ENTRY_FILES].map((candidate) =>
+    path.resolve(cwd, candidate)
+  );
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return path.resolve(cwd, ENTRY_FILE);
+};
 
 export const buildIOS = async (
   config: Config,
@@ -32,7 +55,7 @@ export const buildIOS = async (
   await execa.command(buildCommand.join(' '), {
     stdio: 'inherit',
     env: {
-      ENTRY_FILE,
+      ENTRY_FILE: resolveEntryFile(),
     },
   });
 };
@@ -69,7 +92,7 @@ export const buildAndroid = async (
     stdio: 'inherit',
     cwd,
     env: {
-      ENTRY_FILE,
+      ENTRY_FILE: resolveEntryFile(),
     },
   });
 };

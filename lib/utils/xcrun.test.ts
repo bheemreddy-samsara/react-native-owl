@@ -21,8 +21,14 @@ describe('xcrun.ts', () => {
     it('updates the status bar with default config', async () => {
       await xcrun.xcrunStatusBar({ device: 'iPhone 13 Pro' });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl status_bar iPhone\\ 13\\ Pro override --time 9:41',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -34,8 +40,14 @@ describe('xcrun.ts', () => {
     it('updates the status bar with debug', async () => {
       await xcrun.xcrunStatusBar({ device: 'iPhone 13 Pro', debug: true });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'inherit', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl status_bar iPhone\\ 13\\ Pro override --time 9:41',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -50,8 +62,14 @@ describe('xcrun.ts', () => {
         configuration: 'Release',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl status_bar iPhone\\ 13\\ Pro override --time 9:41',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator',
@@ -66,8 +84,14 @@ describe('xcrun.ts', () => {
         binaryPath: '/some/path/to/my/app.app',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl status_bar iPhone\\ 13\\ Pro override --time 9:41',
         {
           cwd: '/some/path/to/my',
@@ -81,8 +105,14 @@ describe('xcrun.ts', () => {
     it('installs the app with default config', async () => {
       await xcrun.xcrunInstall({ device: 'iPhone 13 Pro', scheme: 'MyApp' });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl install iPhone\\ 13\\ Pro MyApp.app',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -98,8 +128,14 @@ describe('xcrun.ts', () => {
         debug: true,
       });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'inherit', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl install iPhone\\ 13\\ Pro MyApp.app',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -115,8 +151,14 @@ describe('xcrun.ts', () => {
         configuration: 'Release',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl install iPhone\\ 13\\ Pro MyApp.app',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator',
@@ -132,8 +174,14 @@ describe('xcrun.ts', () => {
         binaryPath: '/some/path/to/my/app.app',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(1);
-      expect(execMock).toHaveBeenCalledWith(
+      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenNthCalledWith(
+        1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl install iPhone\\ 13\\ Pro app.app',
         {
           cwd: '/some/path/to/my',
@@ -147,7 +195,7 @@ describe('xcrun.ts', () => {
     it('terminates the app with default config', async () => {
       await xcrun.xcrunTerminate({ device: 'iPhone 13 Pro', scheme: 'MyApp' });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
         "./PlistBuddy -c 'Print CFBundleIdentifier' /Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator/MyApp.app/Info.plist",
@@ -158,6 +206,11 @@ describe('xcrun.ts', () => {
       );
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl terminate iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -173,9 +226,14 @@ describe('xcrun.ts', () => {
         debug: true,
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'inherit', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl terminate iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -191,7 +249,7 @@ describe('xcrun.ts', () => {
         configuration: 'Release',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
         "./PlistBuddy -c 'Print CFBundleIdentifier' /Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator/MyApp.app/Info.plist",
@@ -202,6 +260,11 @@ describe('xcrun.ts', () => {
       );
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl terminate iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator',
@@ -217,7 +280,7 @@ describe('xcrun.ts', () => {
         binaryPath: '/some/path/to/my/app.app',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
         "./PlistBuddy -c 'Print CFBundleIdentifier' /some/path/to/my/app.app/Info.plist",
@@ -228,6 +291,11 @@ describe('xcrun.ts', () => {
       );
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl terminate iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/some/path/to/my',
@@ -241,7 +309,7 @@ describe('xcrun.ts', () => {
     it('launches the app with default config', async () => {
       await xcrun.xcrunLaunch({ device: 'iPhone 13 Pro', scheme: 'MyApp' });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
         "./PlistBuddy -c 'Print CFBundleIdentifier' /Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator/MyApp.app/Info.plist",
@@ -252,6 +320,11 @@ describe('xcrun.ts', () => {
       );
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl launch iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -267,9 +340,14 @@ describe('xcrun.ts', () => {
         debug: true,
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'inherit', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl launch iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -285,7 +363,7 @@ describe('xcrun.ts', () => {
         configuration: 'Release',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
         "./PlistBuddy -c 'Print CFBundleIdentifier' /Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator/MyApp.app/Info.plist",
@@ -296,6 +374,11 @@ describe('xcrun.ts', () => {
       );
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl launch iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator',
@@ -311,7 +394,7 @@ describe('xcrun.ts', () => {
         binaryPath: '/some/path/to/my/app.app',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
         "./PlistBuddy -c 'Print CFBundleIdentifier' /some/path/to/my/app.app/Info.plist",
@@ -322,6 +405,11 @@ describe('xcrun.ts', () => {
       );
       expect(execMock).toHaveBeenNthCalledWith(
         2,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        3,
         'xcrun simctl launch iPhone\\ 13\\ Pro bundleId',
         {
           cwd: '/some/path/to/my',
@@ -335,9 +423,14 @@ describe('xcrun.ts', () => {
     it('sets the simulator UI with default config', async () => {
       await xcrun.xcrunUi({ device: 'iPhone 13 Pro' });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance dark',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -345,7 +438,7 @@ describe('xcrun.ts', () => {
         }
       );
       expect(execMock).toHaveBeenNthCalledWith(
-        2,
+        3,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance light',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -360,9 +453,14 @@ describe('xcrun.ts', () => {
         debug: true,
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'inherit', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance dark',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -370,7 +468,7 @@ describe('xcrun.ts', () => {
         }
       );
       expect(execMock).toHaveBeenNthCalledWith(
-        2,
+        3,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance light',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Debug-iphonesimulator',
@@ -385,9 +483,14 @@ describe('xcrun.ts', () => {
         configuration: 'Release',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance dark',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator',
@@ -395,7 +498,7 @@ describe('xcrun.ts', () => {
         }
       );
       expect(execMock).toHaveBeenNthCalledWith(
-        2,
+        3,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance light',
         {
           cwd: '/Users/johndoe/Projects/my-project/ios/build/Build/Products/Release-iphonesimulator',
@@ -411,9 +514,14 @@ describe('xcrun.ts', () => {
         binaryPath: '/some/path/to/my/app.app',
       });
 
-      expect(execMock).toHaveBeenCalledTimes(2);
+      expect(execMock).toHaveBeenCalledTimes(3);
       expect(execMock).toHaveBeenNthCalledWith(
         1,
+        'xcrun simctl boot iPhone\\ 13\\ Pro',
+        { stdio: 'ignore', reject: false }
+      );
+      expect(execMock).toHaveBeenNthCalledWith(
+        2,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance dark',
         {
           cwd: '/some/path/to/my',
@@ -421,7 +529,7 @@ describe('xcrun.ts', () => {
         }
       );
       expect(execMock).toHaveBeenNthCalledWith(
-        2,
+        3,
         'xcrun simctl ui iPhone\\ 13\\ Pro appearance light',
         {
           cwd: '/some/path/to/my',

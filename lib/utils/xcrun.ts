@@ -21,6 +21,12 @@ export const xcrunStatusBar = async ({
     : path.join(process.cwd(), DEFAULT_BINARY_DIR);
 
   const simulator = device.replace(/([ /])/g, '\\$1');
+  await waitFor(500);
+  await execa.command(`xcrun simctl boot ${simulator}`, {
+    stdio,
+    reject: false,
+  });
+
   const SIMULATOR_TIME = '9:41';
 
   const command = `xcrun simctl status_bar ${simulator} override --time ${SIMULATOR_TIME}`;
@@ -49,6 +55,11 @@ export const xcrunInstall = async ({
   const appFilename = binaryPath ? path.basename(binaryPath) : `${scheme}.app`;
 
   const simulator = device.replace(/([ /])/g, '\\$1');
+  await waitFor(500);
+  await execa.command(`xcrun simctl boot ${simulator}`, {
+    stdio,
+    reject: false,
+  });
 
   const command = `xcrun simctl install ${simulator} ${appFilename}`;
   await execa.command(command, { stdio, cwd });
@@ -82,6 +93,11 @@ export const xcrunTerminate = async ({
   );
 
   const simulator = device.replace(/([ /])/g, '\\$1');
+  await waitFor(500);
+  await execa.command(`xcrun simctl boot ${simulator}`, {
+    stdio,
+    reject: false,
+  });
 
   const command = `xcrun simctl terminate ${simulator} ${bundleId}`;
   await execa.command(command, { stdio, cwd });
@@ -115,6 +131,11 @@ export const xcrunLaunch = async ({
   );
 
   const simulator = device.replace(/([ /])/g, '\\$1');
+  await waitFor(500);
+  await execa.command(`xcrun simctl boot ${simulator}`, {
+    stdio,
+    reject: false,
+  });
 
   const command = `xcrun simctl launch ${simulator} ${bundleId}`;
   await execa.command(command, { stdio, cwd });
@@ -138,6 +159,11 @@ export const xcrunUi = async ({
     : path.join(process.cwd(), DEFAULT_BINARY_DIR);
 
   const simulator = device.replace(/([ /])/g, '\\$1');
+  await waitFor(500);
+  await execa.command(`xcrun simctl boot ${simulator}`, {
+    stdio,
+    reject: false,
+  });
 
   const command = `xcrun simctl ui ${simulator} appearance`;
   await execa.command(`${command} dark`, { stdio, cwd });
@@ -164,6 +190,11 @@ export const xcrunRestore = async ({
     : path.join(process.cwd(), DEFAULT_BINARY_DIR);
 
   const simulator = device.replace(/([ /])/g, '\\$1');
+  await waitFor(500);
+  await execa.command(`xcrun simctl boot ${simulator}`, {
+    stdio,
+    reject: false,
+  });
 
   const command = `xcrun simctl status_bar ${simulator} clear`;
   await execa.command(command, { stdio, cwd });

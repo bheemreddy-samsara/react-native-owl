@@ -14,7 +14,8 @@
     "owl:test:android": "yarn owl test --platform android",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "node ../scripts/link-local-owl.js"
   },
   "dependencies": {
     "react": "19.0.0",
