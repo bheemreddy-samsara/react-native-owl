@@ -58,9 +58,6 @@ typings/
 .env.test
 .env*.local
 
-# generated js
-dist/
-
 # Expo Example prebuild generated files
 ExpoExample/android
 ExpoExample/ios
